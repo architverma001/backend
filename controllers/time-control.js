@@ -7,22 +7,27 @@ const getTime = async (req, res) => {
     const currentTime = moment();
     console.log('Current Time:', currentTime.toISOString());
 
-    const { type } = req.user; // Assuming you have the user type stored in the 'userType' property of the 'user' object in the request
+    const { type } = req.user;
+    const { student, email } = req.body || {}; // Use const instead of var
 
     let query = { time: { $gte: currentTime.toDate() } };
     if (type === true) {
       // If userType is true, show booked slots
       query.booked = true;
-      query.email  = req.user.email;
+      query.email = req.user.email;
+      if (student) {
+        query.student = student;
+      }
     } else {
       // If userType is false, show free slots
       query.booked = false;
+      if (email) {
+        // Do something with email
+        query.email = email;
+      }
     }
 
     const freeNotExpiredSlots = await Time.find(query);
-
-    console.log('Free Not Expired Slots:', freeNotExpiredSlots);
-
     res.json(freeNotExpiredSlots);
   } catch (error) {
     console.error('Error fetching free and not expired slots:', error);

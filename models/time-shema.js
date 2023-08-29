@@ -16,7 +16,12 @@ const timeSchema = new mongoose.Schema({
     type:String,
     default:""
 
+  },
+  student:{
+    type:String,
+    default:""
   }
+
 });
 
 const time = mongoose.model('Time', timeSchema);
